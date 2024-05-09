@@ -21,7 +21,7 @@
     <script type="module">
         import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
         const Quote = {
-            props: ['text', 'id', 'author', 'public', 'searchStr'],
+            props: ['text', 'id', 'author', 'public', 'searchStr', 'allowComments', 'comments'],
             setup(props){
             },
             template:`
@@ -32,15 +32,24 @@
                     <div class="align-self-end">
                         <a :href="/edit/ + id"><i class="material-icons h3">mode_edit</i></a>
                         <a :href="/delete/ + id"><i class="material-icons h3 text-danger">delete</i></a>
-                        <a :href="'/add_comment/' + id"><i class="material-icons h3">add_comment</i></a>
+                        <a v-if="allowComments" :href="'/add_comment/' + id"><i class="material-icons h3">add_comment</i></a>
                     </div>
+                    <h4 v-if="allowComments && comments" class="container-fluid text-center">Comments</h4>
+                    <ul v-if="allowComments && comments" class="mt-2 container-fluid">
+                        <li v-for="comment in comments" class="w-100 p-3 h5 border rounded bg-light text-dark d-flex flex-column">
+                            <p style="overflow-wrap: break-word;">{* comment.text *}</p>
+                            <div class="align-self-end">
+                                <a :href="'/delete_comment/' + id + '/' + comment._id"><i class="material-icons h3 text-danger">delete</i></a>
+                            </div>
+                        </li>
+                    </ul>
                     <em v-if="public" class="text-primary">public</em>
                 </li>
             `,
             delimiters: ['{*' ,'*}']
         };    
         const PublicQuote = {
-            props: ['text', 'id', 'author', 'owner', 'searchStr'],
+            props: ['text', 'id', 'author', 'owner', 'searchStr', 'allowComments', 'comments'],
             setup(props){
             },
             template:`
@@ -49,6 +58,18 @@
                     <p style="overflow-wrap: break-word;">{*text*}</p>
                     <em class="ms-5">--{*author*}</em>
                     <p class="m-0 p-0 mt-3 text-primary"><em class="text-dark">Posted by: </em>{*owner*}</p>
+                    <div class="align-self-end">
+                        <a v-if="allowComments" :href="'/add_comment/' + id"><i class="material-icons h3">add_comment</i></a>
+                    </div>
+                    <h4 v-if="allowComments && comments" class="container-fluid text-center">Comments</h4>
+                    <ul v-if="allowComments && comments" class="mt-2 container-fluid">
+                        <li v-for="comment in comments" class="w-100 p-3 h5 border rounded bg-light text-dark d-flex flex-column">
+                            <p style="overflow-wrap: break-word;">{* comment.text *}</p>
+                            <div class="align-self-end">
+                                <a :href="'/delete_comment/' + id + '/' + comment._id"><i class="material-icons h3 text-danger">delete</i></a>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
             `,
             delimiters: ['{*' ,'*}']
@@ -124,6 +145,8 @@
                                 :author="quote.author"
                                 :public="quote.public"
                                 :searchStr="searchStr"
+                                :allowComments="quote.allow_comment"
+                                :comments="quote.comments"
                             />
                         </ul>
                         <hr/>
@@ -137,6 +160,8 @@
                                 :author="quote.author"
                                 :owner="quote.owner"
                                 :searchStr="searchStr"
+                                :allowComments="quote.allow_comment"
+                                :comments="quote.comments"
                             />
                         </ul>
                         <hr/>

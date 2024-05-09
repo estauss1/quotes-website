@@ -339,7 +339,7 @@ def post_add_comment(id=None):
     # Redirect to the quotes page if the quote ID is not found or if there's no session ID
     return redirect("/quotes")
 
-@app.route("/delete_comment/<quote_id>/<comment_id>", methods=["POST"])
+@app.route("/delete_comment/<quote_id>/<comment_id>", methods=["GET"])
 def post_delete_comment(quote_id=None, comment_id=None):
     session_id = request.cookies.get("session_id", None)
     if not session_id:
