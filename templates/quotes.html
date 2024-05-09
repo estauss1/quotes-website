@@ -49,7 +49,7 @@
             delimiters: ['{*' ,'*}']
         };    
         const PublicQuote = {
-            props: ['text', 'id', 'author', 'owner', 'searchStr', 'allowComments', 'comments'],
+            props: ['text', 'id', 'author', 'owner', 'searchStr', 'allowComments', 'comments', 'user'],
             setup(props){
             },
             template:`
@@ -66,7 +66,7 @@
                         <li v-for="comment in comments" class="w-100 p-3 h5 border rounded bg-light text-dark d-flex flex-column">
                             <p style="overflow-wrap: break-word;">{* comment.text *}</p>
                             <div class="align-self-end">
-                                <a :href="'/delete_comment/' + id + '/' + comment._id"><i class="material-icons h3 text-danger">delete</i></a>
+                                <a v-if="comment.user === user" :href="'/delete_comment/' + id + '/' + comment._id"><i class="material-icons h3 text-danger">delete</i></a>
                             </div>
                         </li>
                     </ul>
@@ -93,9 +93,6 @@
                         userQuotes.value = data.quotes
                         pubQuotes.value = data.publicQuotes
                         user.value = data.user
-                        console.log(pubQuotes.value)
-                        console.log(userQuotes.value)
-                        console.log(user.value)
                     }).catch(err =>{
                         console.log(err)
                     })
@@ -162,6 +159,7 @@
                                 :searchStr="searchStr"
                                 :allowComments="quote.allow_comment"
                                 :comments="quote.comments"
+                                :user="user"
                             />
                         </ul>
                         <hr/>
