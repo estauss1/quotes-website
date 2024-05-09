@@ -320,8 +320,10 @@ def post_add_comment(id=None):
         if quote:
             if "comments" not in quote:
                 quote["comments"] = []
+            # Generate a unique ID for the comment
+            comment_id = str(uuid.uuid4())
             # Add the comment to the quote
-            quote["comments"].append({"text": comment_text})
+            quote["comments"].append({"_id": comment_id, "text": comment_text})
             # Update the quote in the database
             quotes_collection.update_one({"_id": ObjectId(id)}, {"$set": {"comments": quote["comments"]}})
             app.logger.info("Quote entry after adding comment:")
