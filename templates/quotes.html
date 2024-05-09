@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Quotes</title>
+    <style>
+        input[type="checkbox"]{
+            width: 1.5em;
+            height: 1.5em
+        }
+    </style>
 </head>
 <body class="container-fluid d-flex flex-column align-items-center 
         full-height h-100 bg-dark-subtle">
@@ -15,11 +21,12 @@
     <script type="module">
         import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
         const Quote = {
-            props: ['text', 'id', 'author','comments',],
+            props: ['text', 'id', 'author', 'public', 'searchStr'],
             setup(props){
             },
             template:`
-                <li class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
+                <li v-if="text.includes(searchStr) || author.includes(searchStr)" 
+                    class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
                     <p style="overflow-wrap: break-word;">{*text*}</p>
                     <em class="ms-5">--{*author*}</em>
                     <div class="align-self-end">
@@ -27,6 +34,21 @@
                         <a :href="/delete/ + id"><i class="material-icons h3 text-danger">delete</i></a>
                         <a :href="'/add_comment/' + id"><i class="material-icons h3">add_comment</i></a>
                     </div>
+                    <em v-if="public" class="text-primary">public</em>
+                </li>
+            `,
+            delimiters: ['{*' ,'*}']
+        };    
+        const PublicQuote = {
+            props: ['text', 'id', 'author', 'owner', 'searchStr'],
+            setup(props){
+            },
+            template:`
+                <li v-if="text.includes(searchStr) || author.includes(searchStr) || owner.includes(searchStr)" 
+                    class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
+                    <p style="overflow-wrap: break-word;">{*text*}</p>
+                    <em class="ms-5">--{*author*}</em>
+                    <p class="m-0 p-0 mt-3 text-primary"><em class="text-dark">Posted by: </em>{*owner*}</p>
                 </li>
             `,
             delimiters: ['{*' ,'*}']
@@ -38,6 +60,7 @@
                 const user = ref("")
                 const showUserQuotes = ref(true)
                 const showPubQuotes = ref(true)
+                const searchStr = ref("")
 
                 async function FetchQuotes(){
                     fetch('/api/quotes').then((response) =>{
@@ -47,7 +70,9 @@
                         return response.json()
                     }).then((data) => {
                         userQuotes.value = data.quotes
+                        pubQuotes.value = data.publicQuotes
                         user.value = data.user
+                        console.log(pubQuotes.value)
                         console.log(userQuotes.value)
                         console.log(user.value)
                     }).catch(err =>{
@@ -59,25 +84,59 @@
 
                 return{
                     userQuotes,
+                    pubQuotes,
+                    showPubQuotes,
+                    showUserQuotes,
+                    searchStr,
                     user
                 }
             },
             components: {
-                Quote
+                Quote,
+                PublicQuote
             },
             template: `
                <div class="container-fluid d-flex flex-column align-items-center 
         full-height h-100 bg-dark-subtle">
                     <p class="align-self-end m-3 h5">{*user*}(<a class="text-danger" href="/logout">Logout</a>)</p>
+                    <div class="d-flex container-fluid justify-content-evenly">
+                        <div class="d-flex align-items-center">
+                            <label for="userCheckbox" class="h5">Show User Quotes</label>
+                            <input type="checkbox" id="userCheckbox" v-model="showUserQuotes">
+                        </div>
+                        <div>
+                            <label class="h5" for="searchBar">Search Quotes:</label>
+                            <input type="search" id="searchBar" placeholder="Search..." v-model="searchStr">
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <label for="publicCheckbox" class="h5">Show Public Quotes</label>
+                            <input type="checkbox" id="publicCheckbox" v-model="showPubQuotes" class="p-1">
+                        </div>
+                    </div>
                     <div class="mt-2 p-3 w-50 d-flex flex-column align-items-center border rounded-5 bg-dark">
                         <h1 class="mt-2 text-light">{*user*}'s Quotes</h1>
-                        <ul class="mt-2 container-fluid">
+                        <ul v-if="showUserQuotes" class="mt-2 container-fluid">
                             <quote
                                 v-for="quote in userQuotes"
                                 :key="quote.id"
                                 :text="quote.text"
                                 :id="quote._id"
                                 :author="quote.author"
+                                :public="quote.public"
+                                :searchStr="searchStr"
+                            />
+                        </ul>
+                        <hr/>
+                        <h1 class="mt-2 text-light">Public Quotes</h1>
+                        <ul v-if="showPubQuotes" class="mt-2 container-fluid">
+                            <public-quote
+                                v-for="quote in pubQuotes"
+                                :key="quote.id"
+                                :text="quote.text"
+                                :id="quote._id"
+                                :author="quote.author"
+                                :owner="quote.owner"
+                                :searchStr="searchStr"
                             />
                         </ul>
                         <hr/>

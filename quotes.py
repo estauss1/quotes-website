@@ -187,11 +187,12 @@ def post_add():
     text = request.form.get("text", "")
     author = request.form.get("author", "")
     allow_comment = request.form.get("allow_comments", False) == "true"
+    public = request.form.get("public", "") == "on"
     if text != "" and author != "":
         # open the quotes collection
         quotes_collection = quotes_db.quotes_collection
         # insert the quote
-        quote_data = {"owner": user, "text": text, "author": author, "allow_comment": allow_comment}
+        quote_data = {"owner": user, "text": text, "author": author, "public": public ,"allow_comment": allow_comment}
         quotes_collection.insert_one(quote_data)
     # usually do a redirect('....')
 
@@ -228,11 +229,12 @@ def post_edit():
     _id = request.form.get("_id", None)
     text = request.form.get("text", "")
     author = request.form.get("author", "")
+    public = request.form.get("public", "") == "on"
     if _id:
         # open the quotes collection
         quotes_collection = quotes_db.quotes_collection
         # update the values in this particular record
-        values = {"$set": {"text": text, "author": author}}
+        values = {"$set": {"text": text, "author": author, "public": public}}
         data = quotes_collection.update_one({"_id": ObjectId(_id)}, values)
     # do a redirect('....')
     return redirect("/quotes")
@@ -272,10 +274,14 @@ def api_quotes():
     quotes_collection = quotes_db.quotes_collection
     # load the data
     data = list(quotes_collection.find({"owner":user}))
+    publicData = list(quotes_collection.find({"public": True, "owner":{"$ne": user}}))
     for item in data:
+        item["_id"] = str(item["_id"])
+    for item in publicData:
         item["_id"] = str(item["_id"])
     return jsonify({
         'quotes': data,
+        'publicQuotes': publicData,
         'user': user
     })
 
