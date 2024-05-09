@@ -26,6 +26,10 @@
                     <input type="checkbox" id="pubCheck" name="public" class="bg-primary-subtle h5 text-primary-emphasis"
                     {% if data.get('public', False) %} checked {% endif %}/>        
                 </div>
+                <div class="m-3">
+                    <label for="allow_comments" class="text-light me-auto h5">Allow Comments:</label>
+                    <input type="checkbox" id="allow_comments" name="allow_comments" value="true" class="bg-primary-subtle h5 text-primary-emphasis"/>        
+                </div>
                 <button type="submit" class="w-30 align-self-end m-3 mt-5 rounded p-1
                      ps-4 pe-4">Update</button>
                 <br>

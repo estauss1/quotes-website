@@ -230,15 +230,15 @@ def post_edit():
     text = request.form.get("text", "")
     author = request.form.get("author", "")
     public = request.form.get("public", "") == "on"
+    allow_comment = request.form.get("allow_comments", False) == "true"
     if _id:
         # open the quotes collection
         quotes_collection = quotes_db.quotes_collection
         # update the values in this particular record
-        values = {"$set": {"text": text, "author": author, "public": public}}
+        values = {"$set": {"text": text, "author": author, "public": public, "allow_comment": allow_comment}}
         data = quotes_collection.update_one({"_id": ObjectId(_id)}, values)
     # do a redirect('....')
     return redirect("/quotes")
-
 
 @app.route("/delete", methods=["GET"])
 @app.route("/delete/<id>", methods=["GET"])
