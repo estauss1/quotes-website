@@ -21,7 +21,7 @@
     <script type="module">
         import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
         const Quote = {
-            props: ['text', 'id', 'author', 'public', 'searchStr', 'allowComments', 'comments'],
+            props: ['text', 'id', 'author', 'public', 'searchStr', 'allowComments', 'comments', 'dateAdded'],
             setup(props){
             },
             template:`
@@ -44,12 +44,13 @@
                         </li>
                     </ul>
                     <em v-if="public" class="text-primary">public</em>
+                    <em v-if="dateAdded">{* dateAdded *}</em>
                 </li>
             `,
             delimiters: ['{*' ,'*}']
         };    
         const PublicQuote = {
-            props: ['text', 'id', 'author', 'owner', 'searchStr', 'allowComments', 'comments', 'user'],
+            props: ['text', 'id', 'author', 'owner', 'searchStr', 'allowComments', 'comments', 'user', 'dateAdded'],
             setup(props){
             },
             template:`
@@ -70,6 +71,7 @@
                             </div>
                         </li>
                     </ul>
+                    <em v-if="dateAdded">{* dateAdded *}</em>
                 </li>
             `,
             delimiters: ['{*' ,'*}']
@@ -93,6 +95,7 @@
                         userQuotes.value = data.quotes
                         pubQuotes.value = data.publicQuotes
                         user.value = data.user
+                        console.log(userQuotes.value)
                     }).catch(err =>{
                         console.log(err)
                     })
@@ -144,6 +147,7 @@
                                 :searchStr="searchStr"
                                 :allowComments="quote.allow_comment"
                                 :comments="quote.comments"
+                                :dateAdded="quote.date_added"
                             />
                         </ul>
                         <hr/>
@@ -160,6 +164,7 @@
                                 :allowComments="quote.allow_comment"
                                 :comments="quote.comments"
                                 :user="user"
+                                :dateAdded="quote.date_added"
                             />
                         </ul>
                         <hr/>

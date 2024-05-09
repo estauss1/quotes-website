@@ -167,6 +167,8 @@ def get_add():
     return render_template("add_quote.html")
 
 
+from datetime import datetime
+
 @app.route("/add", methods=["POST"])
 def post_add():
     session_id = request.cookies.get("session_id", None)
@@ -186,13 +188,12 @@ def post_add():
     user = session_data.get("user", "unknown user")
     text = request.form.get("text", "")
     author = request.form.get("author", "")
-    allow_comment = request.form.get("allow_comments", False) == "true"
     public = request.form.get("public", "") == "on"
     if text != "" and author != "":
         # open the quotes collection
         quotes_collection = quotes_db.quotes_collection
-        # insert the quote
-        quote_data = {"owner": user, "text": text, "author": author, "public": public ,"allow_comment": allow_comment}
+        # insert the quote with the current date and time
+        quote_data = {"owner": user, "text": text, "author": author, "public": public, "date_added": datetime.now()}
         quotes_collection.insert_one(quote_data)
     # usually do a redirect('....')
 
@@ -201,7 +202,6 @@ def post_add():
         app.logger.info(entry)
 
     return redirect("/quotes")
-
 
 @app.route("/edit/<id>", methods=["GET"])
 def get_edit(id=None):
