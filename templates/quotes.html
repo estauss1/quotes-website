@@ -31,6 +31,19 @@
             `,
             delimiters: ['{*' ,'*}']
         };    
+        const PublicQuote = {
+            props: ['text', 'id', 'author', 'owner'],
+            setup(props){
+            },
+            template:`
+                <li class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
+                    <p style="overflow-wrap: break-word;">{*text*}</p>
+                    <em class="ms-5">--{*author*}</em>
+                    <p class="m-0 p-0 mt-3 text-primary"><em class="text-dark">Posted by: </em>{*owner*}</p>
+                </li>
+            `,
+            delimiters: ['{*' ,'*}']
+        };    
         const QuotePage = {
             setup(){
                 const userQuotes = ref([])
@@ -61,11 +74,13 @@
 
                 return{
                     userQuotes,
+                    pubQuotes,
                     user
                 }
             },
             components: {
-                Quote
+                Quote,
+                PublicQuote
             },
             template: `
                <div class="container-fluid d-flex flex-column align-items-center 
@@ -81,6 +96,18 @@
                                 :id="quote._id"
                                 :author="quote.author"
                                 :public="quote.public"
+                            />
+                        </ul>
+                        <hr/>
+                        <h1 class="mt-2 text-light">Public Quotes</h1>
+                        <ul class="mt-2 container-fluid">
+                            <public-quote
+                                v-for="quote in pubQuotes"
+                                :key="quote.id"
+                                :text="quote.text"
+                                :id="quote._id"
+                                :author="quote.author"
+                                :owner="quote.owner"
                             />
                         </ul>
                         <hr/>
