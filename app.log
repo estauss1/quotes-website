@@ -1,0 +1,2 @@
+2024-05-09 02:40:10,739 - INFO - Quote entry: {'_id': ObjectId('663c68a9468030c50a200de9'), 'owner': 'dsantoli', 'text': '"test quote not allowing comments"', 'author': 'dsantoli', 'allow_comment': False}
+2024-05-09 02:40:10,739 - INFO - Comments not allowed for quote: 663c68a9468030c50a200de9

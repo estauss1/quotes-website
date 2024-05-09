@@ -22,5 +22,12 @@ quotes_collection.delete_many({})
 # put the quotes in the database
 quotes_collection.insert_many(quotes_data)
 
+# get all quotes from the collection
+all_quotes = list(quotes_collection.find())
+
+# print the quotes
+for quote in all_quotes:
+    print(quote)
+    
 # make sure the quotes are there
 print(quotes_collection.count_documents({}))
