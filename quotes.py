@@ -319,6 +319,13 @@ def post_add_comment(id=None):
         if not comment_text:
             return redirect(f"/add_comment/{id}")
         
+        # Get the username from the session
+        session_collection = session_db.session_collection
+        session_data = list(session_collection.find({"session_id": session_id}))
+        if len(session_data) == 0:
+            return redirect("/logout")
+        user = session_data[0].get("user", "unknown user")
+
         # Open the quotes collection
         quotes_collection = quotes_db.quotes_collection
         # Get the quote item
@@ -329,7 +336,8 @@ def post_add_comment(id=None):
             # Generate a unique ID for the comment
             comment_id = str(uuid.uuid4())
             # Add the comment to the quote
-            quote["comments"].append({"_id": comment_id, "text": comment_text})
+            comment = {"_id": comment_id, "text": comment_text, "user": user}
+            quote["comments"].append(comment)
             # Update the quote in the database
             quotes_collection.update_one({"_id": ObjectId(id)}, {"$set": {"comments": quote["comments"]}})
             app.logger.info("Quote entry after adding comment:")
