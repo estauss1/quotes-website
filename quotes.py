@@ -349,10 +349,12 @@ def post_delete_comment(quote_id=None, comment_id=None):
             comment_index = None
             for index, comment in enumerate(quote["comments"]):
                 if comment.get("id") == comment_id:
-                    comment_index = index
-                    break
+                    # Check if the comment belongs to the current user
+                    if comment.get("user_id") == session_id or quote.get("owner") == session_id:
+                        comment_index = index
+                        break
             
-            # If the comment is found, remove it from the list
+            # If the comment is found and it belongs to the current user, remove it from the list
             if comment_index is not None:
                 del quote["comments"][comment_index]
                 # Update the quote in the database
@@ -361,5 +363,5 @@ def post_delete_comment(quote_id=None, comment_id=None):
                 app.logger.info(quote)
                 return redirect("/quotes")
     
-    # Redirect to the quotes page if the quote ID or comment ID is not found, or if there's no session ID
+    # Redirect to the quotes page if the quote ID or comment ID is not found, or if the comment does not belong to the current user
     return redirect("/quotes")
