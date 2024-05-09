@@ -21,11 +21,12 @@
     <script type="module">
         import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
         const Quote = {
-            props: ['text', 'id', 'author', 'public'],
+            props: ['text', 'id', 'author', 'public', 'searchStr'],
             setup(props){
             },
             template:`
-                <li class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
+                <li v-if="text.includes(searchStr) || author.includes(searchStr)" 
+                    class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
                     <p style="overflow-wrap: break-word;">{*text*}</p>
                     <em class="ms-5">--{*author*}</em>
                     <div class="align-self-end">
@@ -38,11 +39,12 @@
             delimiters: ['{*' ,'*}']
         };    
         const PublicQuote = {
-            props: ['text', 'id', 'author', 'owner'],
+            props: ['text', 'id', 'author', 'owner', 'searchStr'],
             setup(props){
             },
             template:`
-                <li class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
+                <li v-if="text.includes(searchStr) || author.includes(searchStr) || owner.includes(searchStr)" 
+                    class="w-100 p-3 h5 border rounded bg-primary-subtle text-dark d-flex flex-column">
                     <p style="overflow-wrap: break-word;">{*text*}</p>
                     <em class="ms-5">--{*author*}</em>
                     <p class="m-0 p-0 mt-3 text-primary"><em class="text-dark">Posted by: </em>{*owner*}</p>
@@ -57,6 +59,7 @@
                 const user = ref("")
                 const showUserQuotes = ref(true)
                 const showPubQuotes = ref(true)
+                const searchStr = ref("")
 
                 async function FetchQuotes(){
                     fetch('/api/quotes').then((response) =>{
@@ -83,6 +86,7 @@
                     pubQuotes,
                     showPubQuotes,
                     showUserQuotes,
+                    searchStr,
                     user
                 }
             },
@@ -99,6 +103,10 @@
                             <label for="userCheckbox" class="h5">Show User Quotes</label>
                             <input type="checkbox" id="userCheckbox" v-model="showUserQuotes">
                         </div>
+                        <div>
+                            <label class="h5" for="searchBar">Search Quotes:</label>
+                            <input type="search" id="searchBar" placeholder="Search..." v-model="searchStr">
+                        </div>
                         <div class="d-flex align-items-center">
                             <label for="publicCheckbox" class="h5">Show Public Quotes</label>
                             <input type="checkbox" id="publicCheckbox" v-model="showPubQuotes" class="p-1">
@@ -114,6 +122,7 @@
                                 :id="quote._id"
                                 :author="quote.author"
                                 :public="quote.public"
+                                :searchStr="searchStr"
                             />
                         </ul>
                         <hr/>
@@ -126,6 +135,7 @@
                                 :id="quote._id"
                                 :author="quote.author"
                                 :owner="quote.owner"
+                                :searchStr="searchStr"
                             />
                         </ul>
                         <hr/>
