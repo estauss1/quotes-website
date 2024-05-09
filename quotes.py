@@ -2,7 +2,20 @@ from flask import Flask, jsonify, flash, send_from_directory, render_template, r
 from mongita import MongitaClientDisk
 from bson import ObjectId
 
+import logging
+from logging.handlers import RotatingFileHandler
+
 app = Flask(__name__)
+
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
 
 # create a mongita client connection
 client = MongitaClientDisk()
@@ -39,10 +52,14 @@ def get_quotes():
     # open the quotes collection
     quotes_collection = quotes_db.quotes_collection
     # load the data
-    data = list(quotes_collection.find({"owner":user}))
+    data = list(quotes_collection.find({"owner": user}))
     for item in data:
         item["_id"] = str(item["_id"])
         item["object"] = ObjectId(item["_id"])
+        # Fetch comments for each quote
+        item["comments"] = []
+        if "comments" in item:
+            item["comments"] = item["comments"]
     # display the data
     html = render_template(
         "quotes.html",
@@ -70,8 +87,14 @@ def get_login():
 def post_login():
     username = request.form["username"]
     password = request.form["password"]
+
     # open the user collection
     user_collection = user_db.user_collection
+
+    app.logger.info("All entries in the user collection:")
+    for entry in user_collection.find():
+        app.logger.info(entry)
+
     # look for the user
     count = user_collection.count_documents({"user": username})
     user_data = user_collection.find_one({"user": username})
@@ -163,14 +186,20 @@ def post_add():
     user = session_data.get("user", "unknown user")
     text = request.form.get("text", "")
     author = request.form.get("author", "")
+    allow_comment = request.form.get("allow_comments", False) == "true"
     public = request.form.get("public", "") == "on"
     if text != "" and author != "":
         # open the quotes collection
         quotes_collection = quotes_db.quotes_collection
         # insert the quote
-        quote_data = {"owner": user, "text": text, "author": author, "public": public}
+        quote_data = {"owner": user, "text": text, "author": author, "public": public ,"allow_comment": allow_comment}
         quotes_collection.insert_one(quote_data)
     # usually do a redirect('....')
+
+    app.logger.info("All quotes in the quotes collection:")
+    for entry in quotes_collection.find():
+        app.logger.info(entry)
+
     return redirect("/quotes")
 
 
@@ -201,15 +230,15 @@ def post_edit():
     text = request.form.get("text", "")
     author = request.form.get("author", "")
     public = request.form.get("public", "") == "on"
+    allow_comment = request.form.get("allow_comments", False) == "true"
     if _id:
         # open the quotes collection
         quotes_collection = quotes_db.quotes_collection
         # update the values in this particular record
-        values = {"$set": {"text": text, "author": author, "public": public}}
+        values = {"$set": {"text": text, "author": author, "public": public, "allow_comment": allow_comment}}
         data = quotes_collection.update_one({"_id": ObjectId(_id)}, values)
     # do a redirect('....')
     return redirect("/quotes")
-
 
 @app.route("/delete", methods=["GET"])
 @app.route("/delete/<id>", methods=["GET"])
@@ -255,3 +284,96 @@ def api_quotes():
         'publicQuotes': publicData,
         'user': user
     })
+
+@app.route("/add_comment/<id>", methods=["GET"])
+def get_add_comment(id=None):
+    session_id = request.cookies.get("session_id", None)
+    if not session_id:
+        response = redirect("/login")
+        return response
+    if id:
+        # Open the quotes collection
+        quotes_collection = quotes_db.quotes_collection
+        # Get the quote item
+        quote = quotes_collection.find_one({"_id": ObjectId(id)})
+        if quote:
+            app.logger.info("Quote entry: %s", quote)
+            # Check if comments are allowed for this quote
+            if not quote.get("allow_comment", True):
+                app.logger.info("Comments not allowed for quote: %s", id)
+                return redirect("/quotes")
+            # Render the add_comment.html template with the quote data
+            return render_template("add_comment.html", quote=quote)
+    # Redirect to the quotes page if the quote ID is not found or if there's no session ID
+    return redirect("/quotes")
+
+@app.route("/add_comment/<id>", methods=["POST"])
+def post_add_comment(id=None):
+    session_id = request.cookies.get("session_id", None)
+    if not session_id:
+        return redirect("/login")
+    
+    if id:
+        # Get the comment text from the form
+        comment_text = request.form.get("commentText", "")
+        if not comment_text:
+            return redirect(f"/add_comment/{id}")
+        
+        # Get the username from the session
+        session_collection = session_db.session_collection
+        session_data = list(session_collection.find({"session_id": session_id}))
+        if len(session_data) == 0:
+            return redirect("/logout")
+        user = session_data[0].get("user", "unknown user")
+
+        # Open the quotes collection
+        quotes_collection = quotes_db.quotes_collection
+        # Get the quote item
+        quote = quotes_collection.find_one({"_id": ObjectId(id)})
+        if quote:
+            if "comments" not in quote:
+                quote["comments"] = []
+            # Generate a unique ID for the comment
+            comment_id = str(uuid.uuid4())
+            # Add the comment to the quote
+            comment = {"_id": comment_id, "text": comment_text, "user": user}
+            quote["comments"].append(comment)
+            # Update the quote in the database
+            quotes_collection.update_one({"_id": ObjectId(id)}, {"$set": {"comments": quote["comments"]}})
+            app.logger.info("Quote entry after adding comment:")
+            app.logger.info(quote)
+            return redirect("/quotes")
+    
+    # Redirect to the quotes page if the quote ID is not found or if there's no session ID
+    return redirect("/quotes")
+
+@app.route("/delete_comment/<quote_id>/<comment_id>", methods=["GET"])
+def post_delete_comment(quote_id=None, comment_id=None):
+    session_id = request.cookies.get("session_id", None)
+    if not session_id:
+        return redirect("/login")
+
+    if quote_id and comment_id:
+        # Open the quotes collection
+        quotes_collection = quotes_db.quotes_collection
+        # Get the quote item
+        quote = quotes_collection.find_one({"_id": ObjectId(quote_id)})
+        if quote and "comments" in quote:
+            # Find the comment in the comments list
+            comment_index = None
+            for index, comment in enumerate(quote["comments"]):
+                if comment.get("_id") == comment_id:
+                    comment_index = index
+                    break
+            
+            # If the comment is found, remove it from the list
+            if comment_index is not None:
+                del quote["comments"][comment_index]
+                # Update the quote in the database
+                quotes_collection.update_one({"_id": ObjectId(quote_id)}, {"$set": {"comments": quote["comments"]}})
+                app.logger.info("Quote entry after deleting comment:")
+                app.logger.info(quote)
+                return redirect("/quotes")
+    
+    # Redirect to the quotes page if the quote ID or comment ID is not found
+    return redirect("/quotes")

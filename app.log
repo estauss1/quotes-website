@@ -1,0 +1,45 @@
+2024-05-09 18:16:26,080 - INFO - All quotes in the quotes collection:
+2024-05-09 18:16:26,081 - INFO - {'_id': ObjectId('663c45ce733ee78cac370906'), 'text': "I'm hungry. When's lunch?", 'author': 'Dorothy', 'owner': 'Greg'}
+2024-05-09 18:16:26,081 - INFO - {'_id': ObjectId('663c45ce733ee78cac370907'), 'text': 'You threw that ball. You go get it.', 'author': 'Suzy', 'owner': 'Dorothy'}
+2024-05-09 18:16:26,081 - INFO - {'_id': ObjectId('663c640db378469d6f362dd4'), 'owner': 'asantoli', 'text': '"testing public quote"', 'author': 'asantoli', 'allow comments': False}
+2024-05-09 18:16:26,082 - INFO - {'_id': ObjectId('663d1917a7715b74bcc2ad40'), 'owner': 'dsantoli', 'text': '"testing quote allowing comments"', 'author': 'dsantoli', 'allow_comment': True, 'comments': [{'_id': '87b48b9c-6e4a-4e4d-a7cd-bf85a2ec2412', 'text': 'test comment 1'}, {'_id': '4618c554-c894-4506-b920-84d0e160b8fd', 'text': 'test comment 2'}, {'_id': 'a859f4ac-30e6-4d91-b086-0de9a38ee938', 'text': 'test comment with username', 'user': 'dsantoli'}]}
+2024-05-09 18:16:26,082 - INFO - {'_id': ObjectId('663d194aa7715b74bcc2ad41'), 'owner': 'dsantoli', 'text': '"testing quote not allowing quotes" ', 'author': 'dsantoli', 'allow_comment': False}
+2024-05-09 18:16:26,083 - INFO - {'_id': ObjectId('663d493ff09cc1eaa20780b7'), 'owner': 'dsantoli', 'text': 'testing public quote', 'author': 'dsantoli', 'public': True, 'allow_comment': True, 'comments': [{'_id': '4e7f6a22-960e-45a1-af84-6b57a72a1e13', 'text': 'comment by asantoli', 'user': 'asantoli'}]}
+2024-05-09 18:16:26,083 - INFO - {'owner': 'asantoli', 'text': 'quote ', 'author': 'asantoli', 'public': True, 'allow_comment': False, '_id': ObjectId('663d4b3af4f812534592f76e')}
+2024-05-09 18:16:55,645 - INFO - All entries in the user collection:
+2024-05-09 18:16:55,648 - INFO - {'_id': ObjectId('663c4c9843fab7e48d9056bf'), 'user': 'dsantoli', 'pass': '2496b5e3e3110648dd996d225aad6bc12088f312c0175f51cbb0371a5d6bd04d', 'salt': 'a0DA58b2163BAD5BCccb63C5DCE9B40A'}
+2024-05-09 18:16:55,648 - INFO - {'_id': ObjectId('663c63acb378469d6f362dd1'), 'user': 'asantoli', 'pass': '4aa1345a62c4d5ebf6c5def247f5d6419dc7c7b416ec2ccdfe2716b517269a13', 'salt': 'De2b13B981e9bAFb9574Bb3F9dAcDAae'}
+2024-05-09 18:16:55,650 - INFO - {'_id': ObjectId('663c644fb378469d6f362dd6'), 'user': 'test', 'pass': 'dd37441e8a19e5c6dab33c71bb2a81e2547f20602eb5a9194f8ca372b46f1149', 'salt': 'f4efC6b5AD88813Bf074Dec2fBeA6c9f'}
+2024-05-09 18:17:08,010 - INFO - All entries in the user collection:
+2024-05-09 18:17:08,010 - INFO - {'_id': ObjectId('663c4c9843fab7e48d9056bf'), 'user': 'dsantoli', 'pass': '2496b5e3e3110648dd996d225aad6bc12088f312c0175f51cbb0371a5d6bd04d', 'salt': 'a0DA58b2163BAD5BCccb63C5DCE9B40A'}
+2024-05-09 18:17:08,011 - INFO - {'_id': ObjectId('663c63acb378469d6f362dd1'), 'user': 'asantoli', 'pass': '4aa1345a62c4d5ebf6c5def247f5d6419dc7c7b416ec2ccdfe2716b517269a13', 'salt': 'De2b13B981e9bAFb9574Bb3F9dAcDAae'}
+2024-05-09 18:17:08,011 - INFO - {'_id': ObjectId('663c644fb378469d6f362dd6'), 'user': 'test', 'pass': 'dd37441e8a19e5c6dab33c71bb2a81e2547f20602eb5a9194f8ca372b46f1149', 'salt': 'f4efC6b5AD88813Bf074Dec2fBeA6c9f'}
+2024-05-09 18:17:14,345 - INFO - All entries in the user collection:
+2024-05-09 18:17:14,347 - INFO - {'_id': ObjectId('663c4c9843fab7e48d9056bf'), 'user': 'dsantoli', 'pass': '2496b5e3e3110648dd996d225aad6bc12088f312c0175f51cbb0371a5d6bd04d', 'salt': 'a0DA58b2163BAD5BCccb63C5DCE9B40A'}
+2024-05-09 18:17:14,348 - INFO - {'_id': ObjectId('663c63acb378469d6f362dd1'), 'user': 'asantoli', 'pass': '4aa1345a62c4d5ebf6c5def247f5d6419dc7c7b416ec2ccdfe2716b517269a13', 'salt': 'De2b13B981e9bAFb9574Bb3F9dAcDAae'}
+2024-05-09 18:17:14,348 - INFO - {'_id': ObjectId('663c644fb378469d6f362dd6'), 'user': 'test', 'pass': 'dd37441e8a19e5c6dab33c71bb2a81e2547f20602eb5a9194f8ca372b46f1149', 'salt': 'f4efC6b5AD88813Bf074Dec2fBeA6c9f'}
+2024-05-09 18:17:44,365 - INFO - All entries in the user collection:
+2024-05-09 18:17:44,365 - INFO - {'_id': ObjectId('663c4c9843fab7e48d9056bf'), 'user': 'dsantoli', 'pass': '2496b5e3e3110648dd996d225aad6bc12088f312c0175f51cbb0371a5d6bd04d', 'salt': 'a0DA58b2163BAD5BCccb63C5DCE9B40A'}
+2024-05-09 18:17:44,366 - INFO - {'_id': ObjectId('663c63acb378469d6f362dd1'), 'user': 'asantoli', 'pass': '4aa1345a62c4d5ebf6c5def247f5d6419dc7c7b416ec2ccdfe2716b517269a13', 'salt': 'De2b13B981e9bAFb9574Bb3F9dAcDAae'}
+2024-05-09 18:17:44,366 - INFO - {'_id': ObjectId('663c644fb378469d6f362dd6'), 'user': 'test', 'pass': 'dd37441e8a19e5c6dab33c71bb2a81e2547f20602eb5a9194f8ca372b46f1149', 'salt': 'f4efC6b5AD88813Bf074Dec2fBeA6c9f'}
+2024-05-09 18:17:51,893 - INFO - All entries in the user collection:
+2024-05-09 18:17:51,893 - INFO - {'_id': ObjectId('663c4c9843fab7e48d9056bf'), 'user': 'dsantoli', 'pass': '2496b5e3e3110648dd996d225aad6bc12088f312c0175f51cbb0371a5d6bd04d', 'salt': 'a0DA58b2163BAD5BCccb63C5DCE9B40A'}
+2024-05-09 18:17:51,894 - INFO - {'_id': ObjectId('663c63acb378469d6f362dd1'), 'user': 'asantoli', 'pass': '4aa1345a62c4d5ebf6c5def247f5d6419dc7c7b416ec2ccdfe2716b517269a13', 'salt': 'De2b13B981e9bAFb9574Bb3F9dAcDAae'}
+2024-05-09 18:17:51,894 - INFO - {'_id': ObjectId('663c644fb378469d6f362dd6'), 'user': 'test', 'pass': 'dd37441e8a19e5c6dab33c71bb2a81e2547f20602eb5a9194f8ca372b46f1149', 'salt': 'f4efC6b5AD88813Bf074Dec2fBeA6c9f'}
+2024-05-09 18:17:56,920 - INFO - Quote entry: {'owner': 'asantoli', 'text': 'quote \r\n                    ', 'author': 'asantoli', 'public': True, 'allow_comment': True, '_id': ObjectId('663d4b3af4f812534592f76e')}
+2024-05-09 18:18:02,072 - INFO - Quote entry after adding comment:
+2024-05-09 18:18:02,072 - INFO - {'owner': 'asantoli', 'text': 'quote \r\n                    ', 'author': 'asantoli', 'public': True, 'allow_comment': True, '_id': ObjectId('663d4b3af4f812534592f76e'), 'comments': [{'_id': 'ee4cb1e8-226f-4986-aedf-23de26c08b89', 'text': 'yay', 'user': 'dsantoli'}]}
+2024-05-09 18:22:20,600 - INFO - Quote entry: {'_id': ObjectId('663d30c02cdf82740e6f2f52'), 'owner': 'anotheruser2', 'text': 'this is a new quote that allows comments and is public', 'author': 'test', 'public': True, 'allow_comment': True, 'comments': [{'_id': '5f82eafa-45c9-41fe-9f95-d7eda75bb560', 'text': 'hi from eric', 'user': 'eric'}]}
+2024-05-09 18:22:28,792 - INFO - Quote entry after adding comment:
+2024-05-09 18:22:28,792 - INFO - {'_id': ObjectId('663d30c02cdf82740e6f2f52'), 'owner': 'anotheruser2', 'text': 'this is a new quote that allows comments and is public', 'author': 'test', 'public': True, 'allow_comment': True, 'comments': [{'_id': '5f82eafa-45c9-41fe-9f95-d7eda75bb560', 'text': 'hi from eric', 'user': 'eric'}, {'_id': '05943802-07f1-4f06-b650-0d465da79a86', 'text': 'new comment from eric\r\n', 'user': 'eric'}]}
+2024-05-09 18:25:37,072 - INFO - Quote entry: {'_id': ObjectId('663c5ba1850b18ecfcf91dd3'), 'owner': 'eric', 'text': "this is eric's public quote that everyone can see\r\n                    ", 'author': 'eric', 'public': True, 'allow_comment': True}
+2024-05-09 18:25:48,557 - INFO - Quote entry after adding comment:
+2024-05-09 18:25:48,557 - INFO - {'_id': ObjectId('663c5ba1850b18ecfcf91dd3'), 'owner': 'eric', 'text': "this is eric's public quote that everyone can see\r\n                    ", 'author': 'eric', 'public': True, 'allow_comment': True, 'comments': [{'_id': '8e8926c4-0e7d-48d7-b302-1805f4f5e03a', 'text': 'comment from eric on his own post', 'user': 'eric'}]}
+2024-05-09 18:26:00,255 - INFO - All entries in the user collection:
+2024-05-09 18:26:00,256 - INFO - {'_id': ObjectId('663682ce6ce92565292d828f'), 'user': 'testuser', 'pass': '3a378a7968cc6e58d23452670208cf86f141a19edeebfead16dde0686270dd53', 'salt': 'adc34AC40b56bBcF1eBc5FE399A6cee8'}
+2024-05-09 18:26:00,256 - INFO - {'_id': ObjectId('66369130be94e50bdac12c78'), 'user': 'anotheruser', 'pass': 'd05f1443c6bb1898cb8f261fdcee74d409f4f71ae0d37fe6e2187ac4b95a4f34', 'salt': 'ec87E3cc1b8b4F8AE719Bed3Bd4fcE2f'}
+2024-05-09 18:26:00,256 - INFO - {'_id': ObjectId('66369157be94e50bdac12c79'), 'user': 'anotheruser2', 'pass': '3a7bb8576dcfa67dec5f839cb53f88e486661669b2d6be013805da63b9120aa9', 'salt': '05da8D598E55cf70Fb7bbaFCf9cd83e2'}
+2024-05-09 18:26:00,256 - INFO - {'_id': ObjectId('663c5b8b850b18ecfcf91dd1'), 'user': 'eric', 'pass': '9bd24c676ecd5f14c675d436e461d5e50e16c94e4ee5c70b988c693654642b11', 'salt': '8bDfB343995Aa289c4da02d2ED777672'}
+2024-05-09 18:26:00,256 - INFO - {'_id': ObjectId('663c5e19850b18ecfcf91dd5'), 'user': 'wowee', 'pass': '2bf5629f004f8008c7cab801a4fb1ac231907b71f8b6e0a01ef4b4a8ef56a5fe', 'salt': 'd0f1c89DCF8D92Cb65f6f69D0Bb2BdCF'}
+2024-05-09 18:26:23,164 - INFO - Quote entry after deleting comment:
+2024-05-09 18:26:23,164 - INFO - {'_id': ObjectId('663d30c02cdf82740e6f2f52'), 'owner': 'anotheruser2', 'text': 'this is a new quote that allows comments and is public', 'author': 'test', 'public': True, 'allow_comment': True, 'comments': [{'_id': '05943802-07f1-4f06-b650-0d465da79a86', 'text': 'new comment from eric\r\n', 'user': 'eric'}]}
