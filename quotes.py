@@ -245,9 +245,13 @@ def api_quotes():
     quotes_collection = quotes_db.quotes_collection
     # load the data
     data = list(quotes_collection.find({"owner":user}))
+    publicData = list(quotes_collection.find({"public": True, "owner":{"$ne": user}}))
     for item in data:
+        item["_id"] = str(item["_id"])
+    for item in publicData:
         item["_id"] = str(item["_id"])
     return jsonify({
         'quotes': data,
+        'publicQuotes': publicData,
         'user': user
     })

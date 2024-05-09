@@ -15,7 +15,7 @@
     <script type="module">
         import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
         const Quote = {
-            props: ['text', 'id', 'author'],
+            props: ['text', 'id', 'author', 'public'],
             setup(props){
             },
             template:`
@@ -26,6 +26,7 @@
                         <a :href="/edit/ + id"><i class="material-icons h3">mode_edit</i></a>
                         <a :href="/delete/ + id"><i class="material-icons h3 text-danger">delete</i></a>
                     </div>
+                    <em v-if="public" class="text-primary">public</em>
                 </li>
             `,
             delimiters: ['{*' ,'*}']
@@ -46,7 +47,9 @@
                         return response.json()
                     }).then((data) => {
                         userQuotes.value = data.quotes
+                        pubQuotes.value = data.publicQuotes
                         user.value = data.user
+                        console.log(pubQuotes.value)
                         console.log(userQuotes.value)
                         console.log(user.value)
                     }).catch(err =>{
@@ -77,6 +80,7 @@
                                 :text="quote.text"
                                 :id="quote._id"
                                 :author="quote.author"
+                                :public="quote.public"
                             />
                         </ul>
                         <hr/>
