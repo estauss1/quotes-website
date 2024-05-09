@@ -332,3 +332,34 @@ def post_add_comment(id=None):
     
     # Redirect to the quotes page if the quote ID is not found or if there's no session ID
     return redirect("/quotes")
+
+@app.route("/delete_comment/<quote_id>/<comment_id>", methods=["POST"])
+def post_delete_comment(quote_id=None, comment_id=None):
+    session_id = request.cookies.get("session_id", None)
+    if not session_id:
+        return redirect("/login")
+
+    if quote_id and comment_id:
+        # Open the quotes collection
+        quotes_collection = quotes_db.quotes_collection
+        # Get the quote item
+        quote = quotes_collection.find_one({"_id": ObjectId(quote_id)})
+        if quote and "comments" in quote:
+            # Find the comment in the comments list
+            comment_index = None
+            for index, comment in enumerate(quote["comments"]):
+                if comment.get("id") == comment_id:
+                    comment_index = index
+                    break
+            
+            # If the comment is found, remove it from the list
+            if comment_index is not None:
+                del quote["comments"][comment_index]
+                # Update the quote in the database
+                quotes_collection.update_one({"_id": ObjectId(quote_id)}, {"$set": {"comments": quote["comments"]}})
+                app.logger.info("Quote entry after deleting comment:")
+                app.logger.info(quote)
+                return redirect("/quotes")
+    
+    # Redirect to the quotes page if the quote ID or comment ID is not found, or if there's no session ID
+    return redirect("/quotes")
